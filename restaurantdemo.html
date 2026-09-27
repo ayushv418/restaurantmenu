@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NOIR — Restaurant</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:#0d0d0c;color:#f5efe5;font-family:Georgia,serif}
+button,a{font:inherit}
+a{text-decoration:none;color:inherit}
+button{cursor:pointer}
+
+.nav{
+position:fixed;top:0;left:0;right:0;height:65px;
+background:#0d0d0cf2;border-bottom:1px solid #ffffff18;
+display:flex;align-items:center;justify-content:space-between;
+padding:0 6%;z-index:100
+}
+.logo{font-size:17px;letter-spacing:4px}
+.logo small{display:block;font:7px Arial;letter-spacing:3px;color:#8d877e;margin-top:3px}
+.nav button,.gold{
+background:#c9a36a;border:0;color:#111;padding:11px 17px;
+font:10px Arial;letter-spacing:1px
+}
+
+.hero{
+min-height:100vh;
+display:flex;align-items:center;justify-content:center;
+text-align:center;padding:90px 20px 50px;
+background:radial-gradient(circle at center,#493925,#171511 38%,#0d0d0c 72%)
+}
+.heroBox{max-width:750px}
+.kicker{font:9px Arial;letter-spacing:5px;color:#c9a36a;margin-bottom:25px}
+.hero h1{
+font-size:clamp(55px,15vw,105px);
+font-weight:400;line-height:.85;letter-spacing:-5px
+}
+.hero h1 span{color:#c9a36a}
+.hero p{
+max-width:520px;margin:28px auto;
+font:13px Arial;color:#a8a198;line-height:1.8
+}
+.buttons{display:flex;justify-content:center;gap:10px;flex-wrap:wrap}
+.dark{
+background:transparent;color:#eee;border:1px solid #ffffff35;
+padding:11px 17px;font:10px Arial
+}
+
+section{padding:95px 6%}
+.story{background:#151512}
+.container{max-width:1050px;margin:auto}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center}
+.photo{
+height:480px;
+background:linear-gradient(135deg,#5a4226,#211a12 50%,#8b683d);
+border:1px solid #ffffff18;
+display:flex;align-items:end;justify-content:center;padding-bottom:25px;
+font-size:10px;letter-spacing:7px;color:#ffffff88
+}
+.label{font:9px Arial;letter-spacing:4px;color:#c9a36a}
+h2{
+font-size:clamp(42px,7vw,72px);
+font-weight:400;line-height:.95;
+letter-spacing:-3px;margin-top:15px
+}
+h2 span{color:#777168}
+.text{
+font:13px Arial;color:#99938b;line-height:1.9;margin-top:25px
+}
+
+.menu{text-align:center}
+.menuIntro{max-width:650px;margin:auto}
+.menuIntro .text{max-width:530px;margin:20px auto}
+.menuBtn{margin-top:25px}
+
+.cards{
+display:grid;grid-template-columns:repeat(3,1fr);
+gap:12px;margin-top:55px
+}
+.card{
+background:#181815;border:1px solid #ffffff10;
+padding:28px;text-align:left;min-height:210px
+}
+.icon{font-size:30px;color:#c9a36a;margin-bottom:45px}
+.card small{font:8px Arial;letter-spacing:3px;color:#c9a36a}
+.card h3{font-size:21px;font-weight:400;margin-top:8px}
+.card p{font:10px Arial;color:#77736c;line-height:1.6;margin-top:7px}
+
+.features{
+display:grid;grid-template-columns:repeat(3,1fr);
+gap:12px;margin-top:50px
+}
+.feature{
+background:#1b1a17;padding:30px;border:1px solid #ffffff0d
+}
+.num{font:10px Arial;color:#c9a36a}
+.feature h3{font-size:19px;font-weight:400;margin-top:25px}
+.feature p{font:11px Arial;color:#858078;line-height:1.7;margin-top:12px}
+
+.contact{
+background:#c9a36a;color:#17130d;text-align:center
+}
+.contact .label{color:#5a421f}
+.contact .text{color:#4f3b20}
+.contactButtons{
+display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-top:25px
+}
+.contactButtons a{
+border:1px solid #5a421f;padding:12px 17px;font:10px Arial
+}
+
+footer{
+padding:25px 6%;display:flex;justify-content:space-between;
+color:#57534d;font:8px Arial;letter-spacing:1px
+}
+
+/* MENU */
+.overlay{
+position:fixed;inset:0;background:#070706f8;
+z-index:1000;display:none;
+align-items:center;justify-content:center;
+padding:70px 15px
+}
+.overlay.show{display:flex}
+
+.close{
+position:absolute;right:18px;top:18px;
+width:40px;height:40px;border-radius:50%;
+border:1px solid #ffffff30;background:#181815;
+color:white;font-size:22px
+}
+
+.book{
+width:min(850px,94vw);
+height:min(600px,75vh);
+position:relative
+}
+
+.cover{
+position:absolute;inset:0;
+background:#291d11;
+border:1px solid #a77b43;
+display:flex;align-items:center;justify-content:center;
+z-index:5;
+transition:.6s;
+transform-origin:left center
+}
+.cover.open{transform:rotateY(-170deg)}
+
+.coverInside{
+width:88%;height:88%;
+border:1px solid #a77b43;
+display:flex;align-items:center;justify-content:center;
+text-align:center
+}
+.coverInside small{font:9px Arial;letter-spacing:5px;color:#c9a36a}
+.coverInside h3{
+font-size:clamp(45px,9vw,80px);
+font-weight:400;line-height:.85;margin-top:15px
+}
+.coverInside p{
+font:8px Arial;letter-spacing:4px;color:#958575;margin-top:18px
+}
+
+.pages{
+position:absolute;inset:0;
+background:#eee2cb;color:#282117;
+overflow:hidden
+}
+
+.page{
+position:absolute;inset:0;
+padding:35px 35px;
+background:#eee2cb;
+display:none
+}
+.page.active{display:block}
+
+.page h3{
+text-align:center;
+font-size:clamp(32px,6vw,55px);
+font-weight:400
+}
+.sub{
+text-align:center;font:8px Arial;
+letter-spacing:3px;color:#977043;
+margin:7px 0 25px
+}
+.items{max-width:650px;margin:auto}
+.item{
+display:flex;justify-content:space-between;
+gap:15px;padding:13px 0;
+border-bottom:1px solid #29211722
+}
+.item h4{font-size:15px;font-weight:400}
+.item p{font:9px Arial;color:#777064;margin-top:4px}
+.price{font-size:13px;color:#976b35;white-space:nowrap}
+
+.pageNumber{
+position:absolute;bottom:13px;
+left:0;right:0;text-align:center;
+font:8px Arial;color:#887c69
+}
+
+.controls{
+position:absolute;
+left:0;right:0;bottom:-55px;
+display:flex;justify-content:center;gap:8px
+}
+.controls button{
+background:#181815;color:#eee;
+border:1px solid #ffffff25;
+padding:10px 15px;font:9px Arial
+}
+
+@media(max-width:700px){
+
+.nav{height:60px;padding:0 5%}
+.logo{font-size:14px}
+
+section{padding:75px 6%}
+
+.hero h1{letter-spacing:-3px}
+
+.grid{grid-template-columns:1fr;gap:35px}
+.photo{height:330px}
+
+.cards,.features{grid-template-columns:1fr}
+
+.card{min-height:170px}
+.icon{margin-bottom:30px}
+
+.book{
+height:min(570px,72vh);
+width:94vw
+}
+
+.page{padding:28px 18px}
+
+.item{padding:11px 0}
+.item h4{font-size:13px}
+.item p{font-size:8px}
+.price{font-size:11px}
+
+footer{
+display:block;
+line-height:2;
+text-align:center
+}
+}
+</style>
+</head>
+
+<body>
+
+<nav class="nav">
+<a href="#" class="logo">
+NOIR
+<small>RESTAURANT</small>
+</a>
+<button id="topMenu">MENU</button>
+</nav>
+
+<section class="hero">
+<div class="heroBox">
+
+<div class="kicker">MODERN DINING · EST. 2026</div>
+
+<h1>
+Food worth<br>
+<span>remembering.</span>
+</h1>
+
+<p>
+A contemporary dining experience built around honest ingredients,
+beautiful flavours and unforgettable evenings.
+</p>
+
+<div class="buttons">
+<button class="gold" id="heroMenu">EXPLORE MENU</button>
+<a href="#contact" class="dark">RESERVE A TABLE</a>
+</div>
+
+</div>
+</section>
+
+<section class="story">
+<div class="container grid">
+
+<div class="photo">
+NOIR · KITCHEN
+</div>
+
+<div>
+<div class="label">OUR STORY</div>
+
+<h2>
+Simple food.<br>
+<span>Beautifully done.</span>
+</h2>
+
+<p class="text">
+NOIR is built on one simple belief: a great meal should feel like
+a moment worth keeping.
+</p>
+
+<p class="text">
+Seasonal ingredients, thoughtful cooking and warm hospitality
+come together to create an evening worth remembering.
+</p>
+</div>
+
+</div>
+</section>
+
+<section class="menu" id="menu">
+<div class="container">
+
+<div class="menuIntro">
+
+<div class="label">OUR MENU</div>
+
+<h2>
+Turn the page.<br>
+<span>Find your favourite.</span>
+</h2>
+
+<p class="text">
+Explore our menu like a real restaurant menu book.
+Starters, mains, desserts and drinks.
+</p>
+
+<button class="gold menuBtn" id="openBook">
+OPEN MENU BOOK →
+</button>
+
+</div>
+
+<div class="cards">
+
+<div class="card">
+<div class="icon">✦</div>
+<small>STARTERS</small>
+<h3>Small beginnings</h3>
+<p>Light, fresh and made to share.</p>
+</div>
+
+<div class="card">
+<div class="icon">◇</div>
+<small>MAIN COURSE</small>
+<h3>From our kitchen</h3>
+<p>Comforting plates with a modern touch.</p>
+</div>
+
+<div class="card">
+<div class="icon">◌</div>
+<small>DESSERT</small>
+<h3>Sweet endings</h3>
+<p>A final bite worth remembering.</p>
+</div>
+
+</div>
+</div>
+</section>
+
+<section class="story">
+<div class="container">
+
+<div class="label">THE EXPERIENCE</div>
+
+<h2>
+More than<br>
+<span>a meal.</span>
+</h2>
+
+<div class="features">
+
+<div class="feature">
+<div class="num">01</div>
+<h3>Fresh ingredients</h3>
+<p>
+Carefully selected ingredients are at the heart of every dish.
+</p>
+</div>
+
+<div class="feature">
+<div class="num">02</div>
+<h3>Warm hospitality</h3>
+<p>
+Relaxed service that makes every guest feel welcome.
+</p>
+</div>
+
+<div class="feature">
+<div class="num">03</div>
+<h3>Beautiful moments</h3>
+<p>
+A setting made for conversations and celebrations.
+</p>
+</div>
+
+</div>
+</div>
+</section>
+
+<section class="contact" id="contact">
+<div class="container">
+
+<div class="label">COME VISIT</div>
+
+<h2>
+Your table<br>
+is waiting.
+</h2>
+
+<p class="text">
+Open every day · 12 PM — 11 PM
+</p>
+
+<div class="contactButtons">
+<a href="tel:+919795222082">CALL</a>
+<a href="https://wa.me/919795222082" target="_blank">WHATSAPP</a>
+<a href="mailto:webdevelopment9595@mail.com">EMAIL</a>
+</div>
+
+</div>
+</section>
+
+<footer>
+<span>NOIR · MODERN RESTAURANT</span>
+<span>CRAFTED WITH CARE</span>
+</footer>
+
+
+<!-- MENU BOOK -->
+
+<div class="overlay" id="overlay">
+
+<button class="close" id="close">×</button>
+
+<div class="book">
+
+<div class="cover" id="cover">
+
+<div class="coverInside">
+
+<div>
+<small>NOIR RESTAURANT</small>
+
+<h3>
+Our<br>
+Menu
+</h3>
+
+<p>FOOD · DRINKS · MOMENTS</p>
+</div>
+
+</div>
+
+</div>
+
+
+<div class="pages">
+
+<!-- PAGE 1 -->
+
+<div class="page active">
+
+<h3>To Begin</h3>
+
+<div class="sub">STARTERS</div>
+
+<div class="items">
+
+<div class="item">
+<div>
+<h4>Truffle Mushroom Toast</h4>
+<p>Sourdough · mushrooms · parmesan</p>
+</div>
+<span class="price">₹325</span>
+</div>
+
+<div class="item">
+<div>
+<h4>Smoked Paneer</h4>
+<p>Charred vegetables · herb oil</p>
+</div>
+<span class="price">₹345</span>
+</div>
+
+<div class="item">
+<div>
+<h4>Crispy Lotus Stem</h4>
+<p>Sesame · chilli · house glaze</p>
+</div>
+<span class="price">₹295</span>
+</div>
+
+<div class="item">
+<div>
+<h4>Roasted Tomato Soup</h4>
+<p>Basil oil · sourdough crisp</p>
+</div>
+<span class="price">₹245</span>
+</div>
+
+<div class="item">
+<div>
+<h4>Garden Bruschetta</h4>
+<p>Tomato · olive · fresh herbs</p>
+</div>
+<span class="price">₹275</span>
+</div>
+
+</div>
+
+<div class="pageNumber">01</div>
+
+</div>
+
+
+<!-- PAGE 2 -->
+
+<div class="page">
+
+<h3>From Kitchen</h3>
+
+<div class="sub">MAIN COURSE</div>
+
+<div class="items">
+
+<div class="item">
+<div>
+<h4>NOIR Signature Pasta</h4>
+<p>Roasted tomato · parmesan · basil</p>
+</div>
+<span class="price">₹425</span>
+</div>
+
+<div class="item">
+<div>
+<h4>Wild Mushroom Risotto</h4>
+<p>Arborio rice · parmesan · herbs</p>
+</div>
+<span class="price">₹475</span>
+</div>
+
+<div class="item">
+<div>
+<h4>Charcoal Paneer Steak</h4>
+<p>Seasonal vegetables · pepper jus</p>
+</div>
+<span class="price">₹495</span>
+</div>
+
+<div class="item">
+<div>
+<h4>Garden Harvest Bowl</h4>
+<p>Quinoa · greens · roasted vegetables</p>
+</div>
+<span class="price">₹395</span>
+</div>
+
+<div class="item">
+<div>
+<h4>Herb Butter Naan</h4>
+<p>Garlic · herbs · cultured butter</p>
+</div>
+<span class="price">₹145</span>
+</div>
+
+</div>
+
+<div class="pageNumber">02</div>
+
+</div>
+
+
+<!-- PAGE 3 -->
+
+<div class="page">
+
+<h3>Sweet Ending</h3>
+
+<div class="sub">DESSERTS</div>
+
+<div class="items">
+
+<div class="item">
+<div>
+<h4>Golden Tiramisu</h4>
+<p>Espresso · mascarpone · cocoa</p>
+</div>
+<span class="price">₹295</span>
+</div>
+
+<div class="item">
+<div>
+<h4>Dark Chocolate Tart</h4>
+<p>70% chocolate · sea salt</p>
+</div>
+<span class="price">₹325</span>
+</div>
+
+<div class="item">
+<div>
+<h4>Burnt Cheesecake</h4>
+<p>Vanilla · berry compote</p>
+</div>
+<span class="price">₹310</span>
+</div>
+
+<div class="item">
+<div>
+<h4>Seasonal Gelato</h4>
+<p>Ask your server for today's flavour</p>
+</div>
+<span class="price">₹225</span>
+</div>
+
+</div>
+
+<div class="pageNumber">03</div>
+
+</div>
+
+
+<!-- PAGE 4 -->
+
+<div class="page">
+
+<h3>Drinks</h3>
+
+<div class="sub">COFFEE · COOLERS</div>
+
+<div class="items">
+
+<div class="item">
+<div>
+<h4>Classic Cappuccino</h4>
+<p>Fresh espresso · steamed milk</p>
+</div>
+<span class="price">₹180</span>
+</div>
+
+<div class="item">
+<div>
+<h4>Cold Brew</h4>
+<p>Slow brewed · smooth · chilled</p>
+</div>
+<span class="price">₹210</span>
+</div>
+
+<div class="item">
+<div>
+<h4>Berry Basil Cooler</h4>
+<p>Berries · basil · citrus</p>
+</div>
+<span class="price">₹240</span>
+</div>
+
+<div class="item">
+<div>
+<h4>Fresh Lime Soda</h4>
+<p>Sweet or salted</p>
+</div>
+<span class="price">₹150</span>
+</div>
+
+</div>
+
+<div class="pageNumber">04</div>
+
+</div>
+
+</div>
+
+
+<div class="controls">
+<button id="prev">← PREVIOUS</button>
+<button id="next">NEXT →</button>
+</div>
+
+</div>
+</div>
+
+
+<script>
+const overlay=document.getElementById("overlay");
+const cover=document.getElementById("cover");
+const pages=document.querySelectorAll(".page");
+
+let currentPage=0;
+
+function openMenu(){
+overlay.classList.add("show");
+
+setTimeout(function(){
+cover.classList.add("open");
+},100);
+}
+
+function closeMenu(){
+cover.classList.remove("open");
+
+setTimeout(function(){
+overlay.classList.remove("show");
+},450);
+}
+
+document.getElementById("openBook").onclick=openMenu;
+document.getElementById("heroMenu").onclick=openMenu;
+document.getElementById("topMenu").onclick=openMenu;
+document.getElementById("close").onclick=closeMenu;
+
+function showPage(number){
+
+pages[currentPage].classList.remove("active");
+
+currentPage=number;
+
+if(currentPage<0){
+currentPage=pages.length-1;
+}
+
+if(currentPage>=pages.length){
+currentPage=0;
+}
+
+pages[currentPage].classList.add("active");
+}
+
+document.getElementById("next").onclick=function(){
+showPage(currentPage+1);
+};
+
+document.getElementById("prev").onclick=function(){
+showPage(currentPage-1);
+};
+
+document.addEventListener("keydown",function(e){
+
+if(e.key==="Escape"){
+closeMenu();
+}
+
+if(overlay.classList.contains("show")){
+
+if(e.key==="ArrowRight"){
+showPage(currentPage+1);
+}
+
+if(e.key==="ArrowLeft"){
+showPage(currentPage-1);
+}
+
+}
+});
+</script>
+
+</body>
+</html>
